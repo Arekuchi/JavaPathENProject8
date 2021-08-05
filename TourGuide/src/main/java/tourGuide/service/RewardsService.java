@@ -1,5 +1,6 @@
 package tourGuide.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -35,15 +36,23 @@ public class RewardsService {
 	public void setDefaultProximityBuffer() {
 		proximityBuffer = defaultProximityBuffer;
 	}
-	
+
+	/*
+	* On calcule les rewards de l'utilisateur qui dépendent des attractions visitées.
+	*/
 	public void calculateRewards(User user) {
-		List<VisitedLocation> userLocations = user.getVisitedLocations();
+		List<VisitedLocation> userLocations = new ArrayList<>(user.getVisitedLocations());
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		
+
+		// Parcours les lieux visités par l'utilisateur (position gps brute)
 		for(VisitedLocation visitedLocation : userLocations) {
+			// parcours les positions gps des attractions
 			for(Attraction attraction : attractions) {
+				// on regarde si le USER a déjà des rewards sur cette attraction
 				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
+					// on vérifie que les positions du USER et de l'attraction sont proche.
 					if(nearAttraction(visitedLocation, attraction)) {
+						// le reward est attribué
 						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 					}
 				}
