@@ -87,7 +87,7 @@ public class TourGuideService {
 	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
 		return gpsUtilService.getUserLocation(user).thenApply(visitedLocation -> {
 			user.addToVisitedLocations(visitedLocation);
-			rewardsService.calculateRewards(user);
+			rewardsService.calculateRewards(user).join();
 			return visitedLocation;
 		});
 	}
