@@ -1,6 +1,7 @@
 package tourGuide.tracker;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +46,8 @@ public class Tracker extends Thread {
 			List<User> users = tourGuideService.getAllUsers();
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
-			users.forEach(u -> tourGuideService.trackUserLocation(u));
+			// On rend asynchrone le tracking de l'utilisateur, ce qui permet de tracker plusieurs utilisateur simultanément
+			CompletableFuture.allOf(users.stream().map(tourGuideService::trackUserLocation).toArray(CompletableFuture[]::new)).join();
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 			stopWatch.reset();
