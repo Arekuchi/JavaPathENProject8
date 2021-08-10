@@ -1,7 +1,9 @@
 package tourGuide.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Service;
@@ -42,27 +44,50 @@ public class RewardsService {
 	public CompletableFuture<Void> calculateRewards(User user) {
 		List<VisitedLocation> userLocations = new ArrayList<>(user.getVisitedLocations());
 		List<Attraction> attractions = gpsUtilService.getAttractions();
-		List<CompletableFuture<Void>> rewardPoints = new ArrayList<>();
+
+		// Pour construire une reward pour l'utilisateur, on a besoin de rewardPoints et la Localisation associé
+		// On collecte les résultats des appels asynchrone pour chaque attraction
+		Map<Attraction, Integer> rewardPoints = new HashMap<>();
+
+		// On collecte la localisation de l'utilisateur pour chaque attraction
+		Map<Attraction, VisitedLocation> rewardVisitedLocations = new HashMap<>();
+
+		// On collecte les appels asynchrone pour chaque attraction
+		Map<Attraction, CompletableFuture<Void>> rewardFutures = new HashMap<>();
 
 		// Parcours les lieux visités par l'utilisateur (position gps brute)
 		for(VisitedLocation visitedLocation : userLocations) {
 			// parcours les positions gps des attractions
 			for(Attraction attraction : attractions) {
 				// on regarde si le USER a déjà des rewards sur cette attraction
-				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
+				if(user.getUserRewards().stream().noneMatch(r -> r.attraction.attractionName.equals(attraction.attractionName))) {
 					// on vérifie que les positions du USER et de l'attraction sont proche.
 					if(nearAttraction(visitedLocation, attraction)) {
 						// le reward est attribué
-						rewardPoints.add(rewardsCentralService.getAttractionRewardPoints(attraction, user).thenAccept(reward -> user.addUserReward(new UserReward(visitedLocation, attraction, reward))));
+						rewardFutures.putIfAbsent(attraction, rewardsCentralService.getAttractionRewardPoints(attraction, user).thenAccept(rewardPoint -> rewardPoints.put(attraction, rewardPoint)));
+						rewardVisitedLocations.putIfAbsent(attraction, visitedLocation);
 					}
 				}
 			}
 		}
-		return CompletableFuture.allOf(rewardPoints.toArray(new CompletableFuture[0]));
+		return CompletableFuture.allOf(rewardFutures.values().toArray(new CompletableFuture[0]))
+				.thenAccept(v -> rewardPoints.forEach((attraction, rewardPoint) -> user.addUserReward(
+						new UserReward(
+								rewardVisitedLocations.get(attraction),
+								attraction,
+								rewardPoint
+						))
+				));
+
 	}
-	
+
+
+	public boolean isWithinAttractionProximity(double distance) {
+		return distance <= attractionProximityRange;
+	}
+
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
-		return getDistance(attraction, location) > attractionProximityRange ? false : true;
+		return isWithinAttractionProximity(getDistance(attraction, location));
 	}
 	
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
@@ -84,4 +109,13 @@ public class RewardsService {
         return statuteMiles;
 	}
 
+
+	public void setAttractionProximityRange(int attractionProximityRange) {
+		this.attractionProximityRange = attractionProximityRange;
+	}
+
+	public void setDefaultProximityBuffer(int defaultProximityBuffer) {
+		this.defaultProximityBuffer = defaultProximityBuffer;
+	}
 }
+
