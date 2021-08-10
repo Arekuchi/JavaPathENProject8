@@ -80,9 +80,14 @@ public class RewardsService {
 				));
 
 	}
-	
+
+
+	public boolean isWithinAttractionProximity(double distance) {
+		return distance <= attractionProximityRange;
+	}
+
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
-		return getDistance(attraction, location) > attractionProximityRange ? false : true;
+		return isWithinAttractionProximity(getDistance(attraction, location));
 	}
 	
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
@@ -104,4 +109,13 @@ public class RewardsService {
         return statuteMiles;
 	}
 
+
+	public void setAttractionProximityRange(int attractionProximityRange) {
+		this.attractionProximityRange = attractionProximityRange;
+	}
+
+	public void setDefaultProximityBuffer(int defaultProximityBuffer) {
+		this.defaultProximityBuffer = defaultProximityBuffer;
+	}
 }
+
