@@ -1,11 +1,10 @@
 package tourGuide;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import gpsUtil.location.Location;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -20,6 +19,8 @@ import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
 import tripPricer.Provider;
+
+import static org.junit.Assert.*;
 
 public class TestTourGuideService {
 
@@ -112,7 +113,8 @@ public class TestTourGuideService {
 		
 		assertEquals(5, attractions.size());
 	}
-	
+
+	@Test
 	public void getTripDeals() {
 		GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
@@ -127,6 +129,27 @@ public class TestTourGuideService {
 		
 		assertEquals(10, providers.size());
 	}
-	
-	
+
+	@Test
+	public void getAllUsersLocations() {
+		InternalTestHelper.setInternalUserNumber(5);
+		TourGuideService tourGuideService = new TourGuideService(null, null);
+
+		Map<UUID, Location> allUsersLocations = tourGuideService.getAllUsersLocations();
+		assertEquals(5, allUsersLocations.size());
+
+		for (Map.Entry<UUID, Location> entry : allUsersLocations.entrySet()) {
+
+			UUID id = entry.getKey();
+			Location location = entry.getValue();
+			assertNotNull(id);
+			assertNotNull(location);
+		}
+	}
+
+
+
+
+
+
 }
