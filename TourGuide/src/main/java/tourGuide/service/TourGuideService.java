@@ -18,6 +18,7 @@ import gpsUtil.location.VisitedLocation;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
+import tourGuide.user.UserPreferences;
 import tourGuide.user.UserReward;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
@@ -178,5 +179,16 @@ public class TourGuideService {
 		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));
 		return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 	}
+
+	public UserPreferences setUserPreferences(User user, UserPreferences userPreferences) {
+		user.setUserPreferences(userPreferences);
+		return userPreferences;
+
+	}
+
+	public UserPreferences getUserPreferences(User user) {
+		return user.getUserPreferences();
+	}
+
 
 }
