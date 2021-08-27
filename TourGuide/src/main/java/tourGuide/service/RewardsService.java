@@ -8,9 +8,11 @@ import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Service;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
+
+import tourGuide.proxy.gpsUtil.GpsUtilProxy;
+import tourGuide.proxy.gpsUtil.dto.Attraction;
+import tourGuide.proxy.gpsUtil.dto.Location;
+import tourGuide.proxy.gpsUtil.dto.VisitedLocation;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
 
@@ -22,10 +24,10 @@ public class RewardsService {
     private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
-	private final GpsUtilService gpsUtilService;
+	private final GpsUtilProxy gpsUtilService;
 	private final RewardCentralService rewardsCentralService;
 	
-	public RewardsService(GpsUtilService gpsUtilService, RewardCentralService rewardsCentralService) {
+	public RewardsService(GpsUtilProxy gpsUtilService, RewardCentralService rewardsCentralService) {
 		this.gpsUtilService = gpsUtilService;
 		this.rewardsCentralService = rewardsCentralService;
 	}
