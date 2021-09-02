@@ -4,16 +4,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import gpsUtil.location.Location;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
+
+import org.mockito.Mockito;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.GpsUtilService;
+import tourGuide.proxy.gpsUtil.GpsUtilProxy;
+import tourGuide.proxy.gpsUtil.dto.Attraction;
+import tourGuide.proxy.gpsUtil.dto.Location;
+import tourGuide.proxy.gpsUtil.dto.VisitedLocation;
 import tourGuide.service.RewardCentralService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -24,9 +26,10 @@ import static org.junit.Assert.*;
 
 public class TestTourGuideService {
 
+	GpsUtilProxy gpsUtilService = Mockito.mock(GpsUtilProxy.class);
+
 	@Test
 	public void getUserLocation() {
-		GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtilService, rewardsService);
@@ -39,7 +42,6 @@ public class TestTourGuideService {
 	
 	@Test
 	public void addUser() {
-		GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtilService, rewardsService);
@@ -61,7 +63,6 @@ public class TestTourGuideService {
 	
 	@Test
 	public void getAllUsers() {
-		GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtilService, rewardsService);
@@ -82,7 +83,6 @@ public class TestTourGuideService {
 	
 	@Test
 	public void trackUser() {
-		GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtilService, rewardsService);
@@ -98,7 +98,6 @@ public class TestTourGuideService {
 	// Not yet implemented
 	@Test
 	public void getNearbyAttractions() {
-		GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtilService, rewardsService);
@@ -116,7 +115,6 @@ public class TestTourGuideService {
 
 
 	public void getTripDeals() {
-		GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtilService, rewardsService);
@@ -146,10 +144,6 @@ public class TestTourGuideService {
 			assertNotNull(location);
 		}
 	}
-
-
-
-
 
 
 }

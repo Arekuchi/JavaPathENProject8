@@ -8,12 +8,13 @@ import java.util.concurrent.CompletableFuture;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
+
+import org.mockito.Mockito;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.GpsUtilService;
+import tourGuide.proxy.gpsUtil.GpsUtilProxy;
+import tourGuide.proxy.gpsUtil.dto.Attraction;
+import tourGuide.proxy.gpsUtil.dto.VisitedLocation;
 import tourGuide.service.RewardCentralService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -22,9 +23,11 @@ import tourGuide.user.UserReward;
 
 public class TestRewardsService {
 
+	GpsUtilProxy gpsUtilService = Mockito.mock(GpsUtilProxy.class);
+
 	@Test
 	public void userGetRewards() {
-		GpsUtilService gpsUtilService = new GpsUtilService();
+
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
 
 
@@ -43,7 +46,6 @@ public class TestRewardsService {
 	
 	@Test
 	public void isWithinAttractionProximity() {
-		GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
 		Attraction attraction = gpsUtilService.getAttractions().get(0);
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
@@ -52,7 +54,6 @@ public class TestRewardsService {
 	// Needs fixed - can throw ConcurrentModificationException
 	@Test
 	public void nearAllAttractions() {
-		GpsUtilService gpsUtilService = new GpsUtilService();
 		RewardsService rewardsService = new RewardsService(gpsUtilService, new RewardCentralService());
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
