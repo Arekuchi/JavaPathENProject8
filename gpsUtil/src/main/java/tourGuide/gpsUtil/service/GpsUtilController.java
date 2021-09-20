@@ -15,13 +15,16 @@ public class GpsUtilController {
 
     private GpsUtil gpsUtil;
 
+    private List<Attraction> attractionList;
+
     public GpsUtilController() {
         gpsUtil = new GpsUtil();
+        attractionList = gpsUtil.getAttractions();
     }
 
     @RequestMapping("/getAttractions")
     public List<Attraction> getAttractions() {
-        return gpsUtil.getAttractions();
+        return attractionList;
     }
 
     @RequestMapping("/getUserLocation")

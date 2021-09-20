@@ -44,6 +44,13 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.6.RELEASE'
 }
 
+test {
+    filter {
+        //include all tests from package
+        includeTestsMatching "tourGuide.*"
+    }
+}
+
 
 jacoco {
     toolVersion = "0.8.4"

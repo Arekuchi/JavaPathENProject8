@@ -18,5 +18,9 @@ public class Attraction extends Location {
         this.attractionId = attractionId;
     }
 
+    public Attraction(String attractionName, String city, String state, double longitude, double latitude){
+        this(attractionName,city,state,UUID.randomUUID(),longitude,latitude);
+    }
+
 
 }
