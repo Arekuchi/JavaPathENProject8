@@ -6,20 +6,19 @@ import org.springframework.context.annotation.Configuration;
 
 import rewardCentral.RewardCentral;
 
+
+import tourGuide.proxy.gpsUtil.GpsUtilProxy;
 import tourGuide.service.RewardCentralService;
 import tourGuide.service.RewardsService;
 
+
 @Configuration
 public class TourGuideModule {
+
 	
 	@Bean
-	public GpsUtilService getGpsUtilService() {
-		return new GpsUtilService();
-	}
-	
-	@Bean
-	public RewardsService getRewardsService() {
-		return new RewardsService(getGpsUtilService(), getRewardCentralService());
+	public RewardsService getRewardsService(GpsUtilProxy getGpsUtilService) {
+		return new RewardsService(getGpsUtilService, getRewardCentralService());
 	}
 	
 	@Bean

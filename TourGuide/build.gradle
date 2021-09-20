@@ -37,7 +37,6 @@ dependencies {
 	compile group: 'com.jsoniter', name: 'jsoniter', version: '0.9.23'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.1.5.RELEASE'
 	
-    compile(name:'gpsUtil', ext:'jar')
     compile(name:'RewardCentral', ext:'jar')
     compile(name:'TripPricer', ext:'jar')
     

@@ -17,4 +17,6 @@ public class Attraction extends Location {
         this.state = state;
         this.attractionId = attractionId;
     }
+
+
 }
